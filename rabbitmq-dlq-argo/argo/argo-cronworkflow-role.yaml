@@ -1,0 +1,23 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: argo-cronworkflow-role
+  namespace: argo  # make sure this matches your CronWorkflow namespace
+rules:
+  - apiGroups: ["argoproj.io"]
+    resources: ["cronworkflows", "workflows", "workflowtemplates"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: argo-cronworkflow-rolebinding
+  namespace: argo
+subjects:
+  - kind: ServiceAccount
+    name: jenkins        # your service account
+    namespace: argo   # where the Jenkins SA lives
+roleRef:
+  kind: Role
+  name: argo-cronworkflow-role
+  apiGroup: rbac.authorization.k8s.io

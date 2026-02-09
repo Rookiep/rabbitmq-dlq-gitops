@@ -1,0 +1,21 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: argo-cronworkflow-clusterrole
+rules:
+  - apiGroups: ["argoproj.io"]
+    resources: ["cronworkflows", "workflows", "workflowtemplates"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: argo-cronworkflow-clusterrolebinding
+subjects:
+  - kind: ServiceAccount
+    name: jenkins
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: argo-cronworkflow-clusterrole
+  apiGroup: rbac.authorization.k8s.io
