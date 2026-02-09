@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rabbitmq-dlq-argo
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/yourname/rabbitmq-dlq-argo
+    targetRevision: main
+    path: argo
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argo
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

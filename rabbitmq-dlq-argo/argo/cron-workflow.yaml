@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: CronWorkflow
+metadata:
+  name: dlq-reprocessor
+spec:
+  schedule: "*/5 * * * *"
+  timezone: "UTC"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 60
+
+  workflowSpec:
+    entrypoint: dlq-flow
+    parallelism: 5
+
+    templates:
+      - name: dlq-flow
+        steps:
+          - - name: reprocess-dlq
+              template: dlq-worker
+
+      - name: dlq-worker
+        container:
+          image: rabbitmq:3-management
+          command: ["/bin/bash", "/scripts/dlq-reprocess.sh"]
+          volumeMounts:
+            - name: script
+              mountPath: /scripts
+
+    volumes:
+      - name: script
+        configMap:
+          name: dlq-script
