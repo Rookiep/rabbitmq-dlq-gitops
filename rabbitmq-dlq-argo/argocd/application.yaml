@@ -5,7 +5,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/yourname/rabbitmq-dlq-argo
+    repoURL: https://github.com/Rookiep/rabbitmq-dlq-gitops
     targetRevision: main
     path: argo
   destination:
